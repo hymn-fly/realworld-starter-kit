@@ -1,8 +1,8 @@
-package org.realworld.demo.service;
+package org.realworld.demo.domain.follow.service;
 
-import org.realworld.demo.domain.user.Follow;
-import org.realworld.demo.domain.user.User;
-import org.realworld.demo.repository.FollowRepository;
+import org.realworld.demo.domain.follow.entity.Follow;
+import org.realworld.demo.domain.user.entity.User;
+import org.realworld.demo.domain.follow.repository.FollowRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

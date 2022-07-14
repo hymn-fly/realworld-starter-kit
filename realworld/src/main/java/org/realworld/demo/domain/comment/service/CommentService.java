@@ -1,9 +1,9 @@
-package org.realworld.demo.service;
+package org.realworld.demo.domain.comment.service;
 
-import org.realworld.demo.domain.article.Article;
-import org.realworld.demo.domain.comment.Comment;
-import org.realworld.demo.domain.user.User;
-import org.realworld.demo.repository.CommentRepository;
+import org.realworld.demo.domain.article.entity.Article;
+import org.realworld.demo.domain.comment.entity.Comment;
+import org.realworld.demo.domain.user.entity.User;
+import org.realworld.demo.domain.comment.repository.CommentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

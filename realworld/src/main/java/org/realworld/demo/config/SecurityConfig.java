@@ -3,7 +3,7 @@ package org.realworld.demo.config;
 import org.realworld.demo.jwt.JwtAuthenticationFilter;
 import org.realworld.demo.jwt.JwtConfiguration;
 import org.realworld.demo.jwt.JwtUtil;
-import org.realworld.demo.repository.UserRepository;
+import org.realworld.demo.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

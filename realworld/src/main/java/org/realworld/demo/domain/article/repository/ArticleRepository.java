@@ -1,6 +1,6 @@
-package org.realworld.demo.repository;
+package org.realworld.demo.domain.article.repository;
 
-import org.realworld.demo.domain.article.Article;
+import org.realworld.demo.domain.article.entity.Article;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

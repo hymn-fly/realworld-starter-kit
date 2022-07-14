@@ -1,7 +1,7 @@
-package org.realworld.demo.repository;
+package org.realworld.demo.domain.follow.repository;
 
-import org.realworld.demo.domain.user.Follow;
-import org.realworld.demo.domain.user.User;
+import org.realworld.demo.domain.follow.entity.Follow;
+import org.realworld.demo.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

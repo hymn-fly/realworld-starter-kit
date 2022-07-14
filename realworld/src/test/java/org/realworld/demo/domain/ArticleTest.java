@@ -2,8 +2,8 @@ package org.realworld.demo.domain;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.realworld.demo.domain.article.Article;
-import org.realworld.demo.domain.user.User;
+import org.realworld.demo.domain.article.entity.Article;
+import org.realworld.demo.domain.user.entity.User;
 
 class ArticleTest {
 
