@@ -9,7 +9,7 @@ import org.realworld.demo.domain.comment.Comment;
 import org.realworld.demo.domain.user.User;
 import org.realworld.demo.service.ArticleService;
 import org.realworld.demo.service.CommentService;
-import org.realworld.demo.service.FollowStateService;
+import org.realworld.demo.service.FollowService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -27,13 +27,13 @@ public class CommentController {
 
   private final ArticleService articleService;
 
-  private final FollowStateService followStateService;
+  private final FollowService followService;
 
   public CommentController(CommentService commentService, ArticleService articleService,
-      FollowStateService followStateService) {
+      FollowService followService) {
     this.commentService = commentService;
     this.articleService = articleService;
-    this.followStateService = followStateService;
+    this.followService = followService;
   }
 
   @PostMapping("/{slug}/comments")
@@ -45,7 +45,7 @@ public class CommentController {
     Article article = articleService.getArticle(slug);
     Comment registeredComment = commentService.registerComment(loginUser, article,
         request.getBody());
-    boolean following = followStateService.checkFollowing(loginUser, article.getAuthor());
+    boolean following = followService.checkFollowing(loginUser, article.getAuthor());
     return new CommentCreateResponse(registeredComment, loginUser, following);
   }
 
@@ -57,7 +57,7 @@ public class CommentController {
     List<Comment> comments = commentService.getCommentsFromArticle(article);
     boolean[] followings = new boolean[comments.size()];
     for (int i = 0; i < comments.size(); i++) {
-      followings[i] = followStateService.checkFollowing(loginUser, comments.get(i).getAuthor());
+      followings[i] = followService.checkFollowing(loginUser, comments.get(i).getAuthor());
     }
     return new MultipleCommentResponse(comments, followings);
   }

@@ -1,4 +1,4 @@
-package org.realworld.demo.domain;
+package org.realworld.demo.domain.user;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
@@ -8,7 +8,7 @@ import org.realworld.demo.domain.user.User;
 import static com.google.common.base.Preconditions.checkArgument;
 
 @Entity
-public class FollowState extends BaseEntity {
+public class Follow extends BaseEntity {
 
     @OneToOne
     private User follower;
@@ -17,9 +17,9 @@ public class FollowState extends BaseEntity {
     private User followee;
 
     /* for table row -> object mapping */
-    protected FollowState(){}
+    protected Follow(){}
 
-    public FollowState(User follower, User followee){
+    public Follow(User follower, User followee){
         checkArgument(followee != null);
         checkArgument(follower != null);
 
