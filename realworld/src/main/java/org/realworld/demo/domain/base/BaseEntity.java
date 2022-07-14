@@ -1,4 +1,4 @@
-package org.realworld.demo.domain;
+package org.realworld.demo.domain.base;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,8 +18,7 @@ public abstract class BaseEntity {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BaseEntity)) return false;
-        BaseEntity that = (BaseEntity) o;
+        if (!(o instanceof BaseEntity that)) return false;
         return com.google.common.base.Objects.equal(id, that.id);
     }
 

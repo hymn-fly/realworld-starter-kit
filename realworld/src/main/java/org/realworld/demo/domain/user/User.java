@@ -1,5 +1,6 @@
-package org.realworld.demo.domain;
+package org.realworld.demo.domain.user;
 
+import org.realworld.demo.domain.base.BaseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -2,11 +2,13 @@ package org.realworld.demo.domain;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import org.realworld.demo.domain.base.BaseEntity;
+import org.realworld.demo.domain.user.User;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 @Entity
-public class FollowState extends BaseEntity{
+public class FollowState extends BaseEntity {
 
     @OneToOne
     private User follower;

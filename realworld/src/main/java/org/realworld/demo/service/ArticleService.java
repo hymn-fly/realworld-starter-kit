@@ -1,8 +1,8 @@
 package org.realworld.demo.service;
 
-import org.realworld.demo.domain.Article;
+import org.realworld.demo.domain.article.Article;
 import org.realworld.demo.domain.Tag;
-import org.realworld.demo.domain.User;
+import org.realworld.demo.domain.user.User;
 import org.realworld.demo.repository.ArticleRepository;
 import org.springframework.stereotype.Service;
 

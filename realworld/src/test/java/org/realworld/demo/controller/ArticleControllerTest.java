@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.realworld.demo.domain.Article;
+import org.realworld.demo.domain.article.Article;
 import org.realworld.demo.domain.Tag;
 import org.realworld.demo.repository.ArticleRepository;
 import org.springframework.beans.factory.annotation.Autowired;

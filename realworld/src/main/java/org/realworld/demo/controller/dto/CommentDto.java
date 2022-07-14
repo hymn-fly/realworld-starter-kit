@@ -1,8 +1,8 @@
 package org.realworld.demo.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.realworld.demo.domain.Comment;
-import org.realworld.demo.domain.User;
+import org.realworld.demo.domain.comment.Comment;
+import org.realworld.demo.domain.user.User;
 
 import java.time.LocalDateTime;
 import java.util.List;

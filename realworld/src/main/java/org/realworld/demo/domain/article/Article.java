@@ -1,19 +1,22 @@
-package org.realworld.demo.domain;
+package org.realworld.demo.domain.article;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import org.realworld.demo.domain.Tag;
+import org.realworld.demo.domain.user.User;
+import org.realworld.demo.domain.base.BaseTimeEntity;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.realworld.demo.utils.Utility.toSlug;
 import static org.springframework.util.StringUtils.hasText;
 
 @Entity
-public class Article extends BaseTimeEntity{
+public class Article extends BaseTimeEntity {
 
-    @ManyToOne
-    @JoinColumn(name="author_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="author_id")
     private User author;
 
     private boolean favorited;

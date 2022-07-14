@@ -1,7 +1,7 @@
 package org.realworld.demo.controller;
 
 import org.realworld.demo.controller.dto.ProfileDto.ProfileResponse;
-import org.realworld.demo.domain.User;
+import org.realworld.demo.domain.user.User;
 import org.realworld.demo.service.FollowStateService;
 import org.realworld.demo.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

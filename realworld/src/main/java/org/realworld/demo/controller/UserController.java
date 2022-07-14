@@ -4,7 +4,7 @@ import org.realworld.demo.controller.dto.UserDto.UserCreateRequest;
 import org.realworld.demo.controller.dto.UserDto.UserLoginRequest;
 import org.realworld.demo.controller.dto.UserDto.UserResponse;
 import org.realworld.demo.controller.dto.UserDto.UserUpdateRequest;
-import org.realworld.demo.domain.User;
+import org.realworld.demo.domain.user.User;
 import org.realworld.demo.jwt.JwtAuthenticationToken;
 import org.realworld.demo.jwt.JwtUtil;
 import org.realworld.demo.service.UserService;

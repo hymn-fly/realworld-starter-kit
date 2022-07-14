@@ -1,4 +1,4 @@
-package org.realworld.demo.domain;
+package org.realworld.demo.domain.base;
 
 import com.google.common.base.Objects;
 

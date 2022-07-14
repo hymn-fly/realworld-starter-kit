@@ -1,6 +1,6 @@
 package org.realworld.demo.jwt;
 
-import org.realworld.demo.domain.User;
+import org.realworld.demo.domain.user.User;
 import org.realworld.demo.repository.UserRepository;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.GenericFilterBean;

@@ -1,7 +1,7 @@
 package org.realworld.demo.service;
 
 import org.realworld.demo.domain.FollowState;
-import org.realworld.demo.domain.User;
+import org.realworld.demo.domain.user.User;
 import org.realworld.demo.repository.FollowStateRepository;
 import org.springframework.stereotype.Service;
 

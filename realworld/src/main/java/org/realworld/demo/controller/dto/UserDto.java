@@ -1,7 +1,7 @@
 package org.realworld.demo.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.realworld.demo.domain.User;
+import org.realworld.demo.domain.user.User;
 
 public class UserDto {
 

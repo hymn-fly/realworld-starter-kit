@@ -1,14 +1,17 @@
-package org.realworld.demo.domain;
+package org.realworld.demo.domain.comment;
 
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import org.realworld.demo.domain.article.Article;
+import org.realworld.demo.domain.base.BaseTimeEntity;
+import org.realworld.demo.domain.user.User;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static org.springframework.util.StringUtils.hasText;
 
 @Entity
-public class Comment extends BaseTimeEntity{
+public class Comment extends BaseTimeEntity {
 
     @ManyToOne
     @JoinColumn(name="author_id", nullable = false)
