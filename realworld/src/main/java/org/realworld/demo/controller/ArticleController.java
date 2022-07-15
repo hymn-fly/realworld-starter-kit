@@ -3,10 +3,10 @@ package org.realworld.demo.controller;
 import org.realworld.demo.controller.dto.ArticleDto.ArticleCreateRequest;
 import org.realworld.demo.controller.dto.ArticleDto.ArticleResponse;
 import org.realworld.demo.controller.dto.ArticleDto.ArticleUpdateRequest;
-import org.realworld.demo.domain.Article;
-import org.realworld.demo.domain.User;
-import org.realworld.demo.service.ArticleService;
-import org.realworld.demo.service.FollowStateService;
+import org.realworld.demo.domain.article.entity.Article;
+import org.realworld.demo.domain.user.entity.User;
+import org.realworld.demo.domain.article.service.ArticleService;
+import org.realworld.demo.domain.follow.service.FollowService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -17,18 +17,18 @@ public class ArticleController {
 
     private final ArticleService articleService;
 
-    private final FollowStateService followStateService;
+    private final FollowService followService;
 
-    public ArticleController(ArticleService articleService, FollowStateService followStateService) {
+    public ArticleController(ArticleService articleService, FollowService followService) {
         this.articleService = articleService;
-        this.followStateService = followStateService;
+        this.followService = followService;
     }
 
     @GetMapping("/{slug}")
     public ArticleResponse getArticle(@PathVariable String slug){
         Article article = articleService.getArticle(slug);
 
-        boolean following = followStateService.checkFollowing(null, article.getAuthor());
+        boolean following = followService.checkFollowing(null, article.getAuthor());
 
         return new ArticleResponse(article, following);
     }
@@ -39,7 +39,7 @@ public class ArticleController {
 
         Article article = articleService.createArticle(loginUser, request.getTitle(), request.getDescription(), request.getBody(), request.getTags());
 
-        boolean following = followStateService.checkFollowing(loginUser, article.getAuthor());
+        boolean following = followService.checkFollowing(loginUser, article.getAuthor());
 
         return new ArticleResponse(article, following);
     }
@@ -54,7 +54,7 @@ public class ArticleController {
 
         Article updatedArticle = articleService.updateArticle(slug, request.getTitle(), request.getDescription(), request.getBody());
 
-        boolean following = followStateService.checkFollowing(loginUser, updatedArticle.getAuthor());
+        boolean following = followService.checkFollowing(loginUser, updatedArticle.getAuthor());
 
         return new ArticleResponse(updatedArticle, following);
     }

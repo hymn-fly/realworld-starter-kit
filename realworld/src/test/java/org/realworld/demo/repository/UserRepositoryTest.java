@@ -1,7 +1,8 @@
 package org.realworld.demo.repository;
 
 import org.junit.jupiter.api.Test;
-import org.realworld.demo.domain.User;
+import org.realworld.demo.domain.user.entity.User;
+import org.realworld.demo.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 

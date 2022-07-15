@@ -1,9 +1,9 @@
-package org.realworld.demo.service;
+package org.realworld.demo.domain.article.service;
 
-import org.realworld.demo.domain.Article;
+import org.realworld.demo.domain.article.entity.Article;
 import org.realworld.demo.domain.Tag;
-import org.realworld.demo.domain.User;
-import org.realworld.demo.repository.ArticleRepository;
+import org.realworld.demo.domain.user.entity.User;
+import org.realworld.demo.domain.article.repository.ArticleRepository;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

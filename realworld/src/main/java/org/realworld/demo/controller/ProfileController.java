@@ -1,9 +1,9 @@
 package org.realworld.demo.controller;
 
 import org.realworld.demo.controller.dto.ProfileDto.ProfileResponse;
-import org.realworld.demo.domain.User;
-import org.realworld.demo.service.FollowStateService;
-import org.realworld.demo.service.UserService;
+import org.realworld.demo.domain.user.entity.User;
+import org.realworld.demo.domain.follow.service.FollowService;
+import org.realworld.demo.domain.user.service.UserService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/profiles")
 public class ProfileController {
 
-    private final FollowStateService stateService;
+    private final FollowService stateService;
 
     private final UserService userService;
 
-    public ProfileController(FollowStateService stateService, UserService userService) {
+    public ProfileController(FollowService stateService, UserService userService) {
         this.stateService = stateService;
         this.userService = userService;
     }

@@ -1,24 +1,28 @@
-package org.realworld.demo.domain;
+package org.realworld.demo.domain.article.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.realworld.demo.domain.Tag;
+import org.realworld.demo.domain.user.entity.User;
+import org.realworld.demo.domain.base.BaseTimeEntity;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static org.realworld.demo.utils.Utility.toSlug;
+import static org.realworld.demo.domain.article.util.Utility.toSlug;
 import static org.springframework.util.StringUtils.hasText;
 
 @Entity
-public class Article extends BaseTimeEntity{
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Article extends BaseTimeEntity {
 
-    @ManyToOne
-    @JoinColumn(name="author_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name="author_id")
     private User author;
-
-    private boolean favorited;
-
-    private int favoriteCount;
 
     private String title;
 
@@ -32,50 +36,17 @@ public class Article extends BaseTimeEntity{
     @OneToMany
     private final List<Tag> tags = new ArrayList<>();
 
-    protected Article(){}
-
     public Article(Builder builder){
         checkArgument(hasText(builder.title));
         checkArgument(builder.author != null);
         checkArgument(hasText(builder.body));
 
         this.author = builder.author;
-        this.favorited = false;
-        this.favoriteCount = 0;
         this.title = builder.title;
         this.slug = toSlug(this.title);
         this.description = builder.description;
         this.body = builder.body;
         this.tags.addAll(builder.tags);
-    }
-
-
-    public String getTitle(){
-        return title;
-    }
-
-    public String getDescription(){ return description;}
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public String getSlug(){ return slug; }
-
-    public boolean isFavorited() {
-        return favorited;
-    }
-
-    public int getFavoriteCount() {
-        return favoriteCount;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
     }
 
     public void update(String title, String description, String body){

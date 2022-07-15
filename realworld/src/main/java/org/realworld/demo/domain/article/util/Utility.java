@@ -1,12 +1,13 @@
-package org.realworld.demo.utils;
+package org.realworld.demo.domain.article.util;
 
 import java.text.Normalizer;
 import java.util.Locale;
 import java.util.regex.Pattern;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Utility {
-
-    private Utility(){}
 
 //    private static final Pattern NONTEXT = Pattern.compile("[가-힣-][^\\w-]"); // [^\w-]
     private static final Pattern NONTEXT = Pattern.compile("[^\\w-]"); // [^\w-]

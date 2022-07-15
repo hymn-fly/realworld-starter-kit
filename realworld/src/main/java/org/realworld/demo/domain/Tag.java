@@ -1,5 +1,6 @@
 package org.realworld.demo.domain;
 
+import org.realworld.demo.domain.base.BaseEntity;
 import org.springframework.util.StringUtils;
 
 import javax.persistence.Entity;
@@ -7,7 +8,7 @@ import javax.persistence.Entity;
 import static com.google.common.base.Preconditions.checkArgument;
 
 @Entity
-public class Tag extends BaseEntity{
+public class Tag extends BaseEntity {
 
     private String name;
 
