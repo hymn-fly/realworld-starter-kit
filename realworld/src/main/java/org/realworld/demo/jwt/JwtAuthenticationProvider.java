@@ -20,6 +20,10 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
   public Authentication authenticate(Authentication authentication)
       throws IllegalArgumentException {
     JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
+    return processUserAuthentication(token);
+  }
+
+  private Authentication processUserAuthentication(JwtAuthenticationToken token) {
     String email = (String) token.getPrincipal();
     String password = token.getCredentials();
 
@@ -34,6 +38,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
 
     return new JwtAuthenticationToken(jwtPrincipal, null, loginUser.getAuthorities());
   }
+
 
   @Override
   public boolean supports(Class<?> authentication) {
