@@ -1,33 +1,39 @@
 package org.realworld.demo.jwt;
 
+import java.util.Collection;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
 
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
-    private final Object principal;
+  private final Object principal;
 
-    private final String token;
-
-
-    public JwtAuthenticationToken(Object principal, String token) {
-        super(null);
-        setAuthenticated(true);
-        this.principal = principal;
-        this.token = token;
-    }
+  private final String credentials;
 
 
-    @Override
-    public Object getCredentials() {
-        return null;
-    }
+  public JwtAuthenticationToken(Object principal, String credentials) {
+    super(null);
+    setAuthenticated(false);
+    this.principal = principal;
+    this.credentials = credentials;
+  }
 
-    @Override
-    public Object getPrincipal() {
-        return principal;
-    }
+  public JwtAuthenticationToken(Object principal, String credentials,
+      Collection<? extends GrantedAuthority> authorities) {
+    super(authorities);
+    setAuthenticated(true);
+    this.principal = principal;
+    this.credentials = credentials;
+  }
 
-    public String getToken(){
-        return token;
-    }
+
+  @Override
+  public String getCredentials() {
+    return credentials;
+  }
+
+  @Override
+  public Object getPrincipal() {
+    return principal;
+  }
 }
