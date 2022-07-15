@@ -13,6 +13,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.realworld.demo.controller.dto.UserDto.UserLoginRequest;
 import org.realworld.demo.jwt.JwtUtil.Claims;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 
+@Slf4j
 public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
   private final ObjectMapper objectMapper = new ObjectMapper();
@@ -48,14 +50,16 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
   public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException {
     if (requiresAuthentication(request, response)) {
-      Authentication token = this.attemptAuthentication(request, response);
-      if (token != null) {
+      try {
+        Authentication token = this.attemptAuthentication(request, response);
         SecurityContextHolder.getContext().setAuthentication(token);
+      } catch (IllegalArgumentException ex) {
+        log.trace("아이디, 비밀번호가 일치하지 않습니다");
+        chain.doFilter(request, response);
       }
-    } else if (getToken(request) != null) { // Token으로 인증 시도
+    } else if (getToken(request) != null) {
       String token = getToken(request);
-      JwtAuthenticationToken authenticationToken = (JwtAuthenticationToken) this.authenticateJwt(
-          token);
+      JwtAuthenticationToken authenticationToken = this.createAuthentication(token);
 
       if (authenticationToken != null) {
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -64,7 +68,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     chain.doFilter(request, response);
   }
 
-  private Authentication authenticateJwt(String token) {
+  private JwtAuthenticationToken createAuthentication(String token) {
     try {
       Claims claims = jwtUtil.verifyToken(token);
       String jwt = jwtUtil.createToken(claims);

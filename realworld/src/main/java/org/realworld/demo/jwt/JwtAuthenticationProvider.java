@@ -3,9 +3,7 @@ package org.realworld.demo.jwt;
 import org.realworld.demo.domain.user.entity.User;
 import org.realworld.demo.domain.user.service.UserService;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
@@ -19,26 +17,22 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
   }
 
   @Override
-  public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+  public Authentication authenticate(Authentication authentication)
+      throws IllegalArgumentException {
     JwtAuthenticationToken token = (JwtAuthenticationToken) authentication;
     String email = (String) token.getPrincipal();
     String password = token.getCredentials();
-    try {
-      User loginUser = userService.login(email, password);
-      String[] roles = loginUser.getAuthorities()
-          .stream().map(Object::toString)
-          .toList().toArray(String[]::new);
 
-      String jwt = jwtUtil.createToken(JwtUtil.Claims.from(loginUser.getId(), email, roles));
+    User loginUser = userService.login(email, password);
+    String[] roles = loginUser.getAuthorities()
+        .stream().map(Object::toString)
+        .toList().toArray(String[]::new);
 
-      JwtPrincipal jwtPrincipal = new JwtPrincipal(jwt, loginUser.getId());
+    String jwt = jwtUtil.createToken(JwtUtil.Claims.from(loginUser.getId(), email, roles));
 
-      return new JwtAuthenticationToken(jwtPrincipal, null, loginUser.getAuthorities());
-    } catch (BadCredentialsException ex) {
-      return null;
-    }
+    JwtPrincipal jwtPrincipal = new JwtPrincipal(jwt, loginUser.getId());
 
-
+    return new JwtAuthenticationToken(jwtPrincipal, null, loginUser.getAuthorities());
   }
 
   @Override
