@@ -1,5 +1,6 @@
 package org.realworld.demo.domain.user.service;
 
+import java.util.Optional;
 import org.realworld.demo.domain.user.entity.User;
 import org.realworld.demo.domain.user.repository.UserRepository;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -7,8 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -19,17 +18,22 @@ public class UserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
-    public User saveUser(User user){
+    public User saveUser(User user) {
         return userRepository.save(user);
     }
 
-    public User updateUser(User originUser, String email, String username, String password, String image, String bio){
+    public User updateUser(User originUser, String email, String username, String password,
+        String image, String bio) {
         User updatedUser = originUser.update(email, password, username, bio, image);
         return userRepository.save(updatedUser);
     }
 
-    public User getUserByUsername(String username){
+    public User getUserByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow();
+    }
+
+    public User getById(Long id) {
+        return userRepository.findById(id).orElseThrow();
     }
 
 
@@ -38,10 +42,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findByEmail(email).orElseThrow();
     }
 
-    public User login(String email, String password){
+    public User login(String email, String password) {
         Optional<User> maybeUser = userRepository.findByEmail(email);
         User user = maybeUser.orElseThrow();
-        if(!user.getPassword().equals(password)){
+        if (!user.getPassword().equals(password)) {
             throw new BadCredentialsException("비밀번호가 맞지 않습니다");
         }
         return user;

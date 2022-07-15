@@ -9,6 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -47,7 +48,10 @@ public final class JwtUtil {
     return new Claims(jwt);
   }
 
+  @Getter
   public static class Claims {
+
+    private final Long userId;
 
     private final String email;
 
@@ -64,20 +68,22 @@ public final class JwtUtil {
       Map<String, Claim> claims = decodedJWT.getClaims();
       this.email = claims.getOrDefault("email", new NullClaim()).asString();
       this.roles = claims.getOrDefault("roles", new NullClaim()).asArray(String.class);
+      this.userId = claims.getOrDefault("userId", new NullClaim()).asLong();
 
       this.exp = decodedJWT.getExpiresAt();
       this.iat = decodedJWT.getIssuedAt();
       this.iss = decodedJWT.getIssuer();
     }
 
-    private Claims(String email, String... roles) {
+    private Claims(Long userId, String email, String... roles) {
       this.email = email;
       this.roles = roles;
+      this.userId = userId;
     }
 
     // Jwt Token만들 때, 사용하는 정적 메소드
-    public static Claims from(String email, String... roles) {
-      return new Claims(email, roles);
+    public static Claims from(Long userId, String email, String... roles) {
+      return new Claims(userId, email, roles);
     }
 
   }
