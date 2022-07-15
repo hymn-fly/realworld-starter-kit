@@ -3,53 +3,83 @@ package org.realworld.demo.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.exceptions.JWTCreationException;
-import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.impl.NullClaim;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.stereotype.Component;
-
-import java.sql.Date;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Map;
+import org.springframework.stereotype.Component;
 
 @Component
 public final class JwtUtil {
 
-    private final JwtConfiguration configuration;
+  private final JwtConfiguration configuration;
 
-    public JwtUtil(JwtConfiguration jwtConfiguration){
-        configuration = jwtConfiguration;
+  private final Algorithm algorithm;
+
+  private final JWTVerifier verifier;
+
+  public JwtUtil(JwtConfiguration jwtConfiguration) {
+    this.configuration = jwtConfiguration;
+    this.algorithm = Algorithm.HMAC512(jwtConfiguration.getClientSecret());
+    this.verifier = JWT.require(this.algorithm)
+        .withIssuer(configuration.getIssuer())
+        .build();
+  }
+
+  public String createToken(Claims claims) {
+    Date now = new Date(Calendar.getInstance().getTimeInMillis());
+    Date expireDate = new Date(now.getTime() + configuration.getExpirySeconds() * 1000L);
+
+    return JWT.create()
+        .withIssuer(configuration.getIssuer())
+        .withExpiresAt(expireDate)
+        .withIssuedAt(now)
+
+        .withClaim("email", claims.email)
+        .withArrayClaim("roles", claims.roles)
+        .sign(algorithm);
+  }
+
+  public Claims verifyToken(String token) {
+    DecodedJWT jwt = verifier.verify(token);
+    return new Claims(jwt);
+  }
+
+  public static class Claims {
+
+    private final String email;
+
+    private final String[] roles;
+
+    private String iss;
+
+    private Date exp;
+
+    private Date iat;
+
+    // Jwt token verify시 사용하는 생성자
+    private Claims(DecodedJWT decodedJWT) {
+      Map<String, Claim> claims = decodedJWT.getClaims();
+      this.email = claims.getOrDefault("email", new NullClaim()).asString();
+      this.roles = claims.getOrDefault("roles", new NullClaim()).asArray(String.class);
+
+      this.exp = decodedJWT.getExpiresAt();
+      this.iat = decodedJWT.getIssuedAt();
+      this.iss = decodedJWT.getIssuer();
     }
 
-    public String createToken(String email){
-        try {
-            Algorithm algorithm = Algorithm.HMAC512(configuration.getClientSecret());
-            Date now = new Date(Calendar.getInstance().getTimeInMillis());
-            Date expireDate = new Date(now.getTime() + configuration.getExpirySeconds() * 1000L);
-
-            return JWT.create()
-                    .withExpiresAt(expireDate)
-                    .withIssuedAt(now)
-                    .withIssuer(configuration.getIssuer())
-                    .withClaim("email", email)
-                    .sign(algorithm);
-
-        } catch (JWTCreationException exception){
-            throw new JWTCreationException("Jwt 토큰 생성 오류", new IllegalArgumentException());
-        }
+    private Claims(String email, String... roles) {
+      this.email = email;
+      this.roles = roles;
     }
 
-    public String verifyToken(String token){
-        try {
-            Algorithm algorithm = Algorithm.HMAC512(configuration.getClientSecret());
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer(configuration.getIssuer())
-                    .build(); //Reusable verifier instance
-            DecodedJWT jwt = verifier.verify(token);
-            return jwt.getClaim("email").asString();
-        } catch (JWTVerificationException exception){
-            throw new JWTVerificationException("Jwt 인증 오류");
-        }
-
+    // Jwt Token만들 때, 사용하는 정적 메소드
+    public static Claims from(String email, String... roles) {
+      return new Claims(email, roles);
     }
+
+  }
 
 }
