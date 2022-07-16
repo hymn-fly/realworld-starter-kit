@@ -27,10 +27,7 @@ public class UserController {
 
   @PostMapping("/users/login")
   public UserResponse login(@RequestBody UserLoginRequest loginRequest) {
-    User loginUser = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
-    // loginUser로 Token 만들어서 발급
-    return UserResponse.from(loginUser, null);
-
+    return userService.login(loginRequest.getEmail(), loginRequest.getPassword());
   }
 
   @PostMapping("/users")

@@ -1,5 +1,6 @@
 package org.realworld.demo.domain.user.service;
 
+import org.realworld.demo.controller.dto.UserDto.UserResponse;
 import org.realworld.demo.domain.user.entity.User;
 
 public interface UserService {
@@ -11,6 +12,6 @@ public interface UserService {
 
   User getUserByUsername(String username);
 
-  User login(String email, String password);
+  UserResponse login(String email, String password);
 
 }

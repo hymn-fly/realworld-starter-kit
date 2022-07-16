@@ -1,18 +1,20 @@
 package org.realworld.demo.domain.user.service;
 
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import org.realworld.demo.controller.dto.UserDto.UserResponse;
 import org.realworld.demo.domain.user.entity.User;
 import org.realworld.demo.domain.user.repository.UserRepository;
+import org.realworld.demo.jwt.JwtUtil;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
 
-  public UserServiceImpl(UserRepository userRepository) {
-    this.userRepository = userRepository;
-  }
+  private final JwtUtil jwtUtil;
 
   public User saveUser(User user) {
     return userRepository.save(user);
@@ -32,12 +34,19 @@ public class UserServiceImpl implements UserService {
     return userRepository.findById(id).orElseThrow();
   }
 
-  public User login(String email, String password) {
+  public UserResponse login(String email, String password) {
     Optional<User> maybeUser = userRepository.findByEmail(email);
     User user = maybeUser.orElseThrow(() -> new IllegalArgumentException("이메일이나 비밀번호가 잘못되었습니다"));
     if (!user.getPassword().equals(password)) {
       throw new IllegalArgumentException("이메일이나 비밀번호가 잘못되었습니다");
     }
-    return user;
+
+    String[] roles = user.getAuthorities()
+        .stream().map(Object::toString)
+        .toList().toArray(String[]::new);
+
+    String jwt = jwtUtil.createToken(JwtUtil.Claims.from(user.getId(), email, roles));
+
+    return UserResponse.from(user, jwt);
   }
 }
