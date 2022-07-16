@@ -1,13 +1,12 @@
 package org.realworld.demo.controller;
 
 import org.realworld.demo.controller.dto.UserDto.UserCreateRequest;
+import org.realworld.demo.controller.dto.UserDto.UserLoginRequest;
 import org.realworld.demo.controller.dto.UserDto.UserResponse;
 import org.realworld.demo.controller.dto.UserDto.UserUpdateRequest;
 import org.realworld.demo.domain.user.entity.User;
 import org.realworld.demo.domain.user.service.UserService;
 import org.realworld.demo.jwt.JwtAuthenticationToken;
-import org.realworld.demo.jwt.JwtPrincipal;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,15 +26,10 @@ public class UserController {
   }
 
   @PostMapping("/users/login")
-  public UserResponse login() {
-    JwtAuthenticationToken authentication = (JwtAuthenticationToken) SecurityContextHolder.getContext()
-        .getAuthentication();
-    if (authentication == null) {
-      throw new BadCredentialsException("아이디나 비밀번호가 올바르지 않습니다");
-    }
-    JwtPrincipal principal = (JwtPrincipal) authentication.getPrincipal();
-    User loginUser = userService.getById(principal.getUserId());
-    return UserResponse.from(loginUser, principal.getToken());
+  public UserResponse login(@RequestBody UserLoginRequest loginRequest) {
+    User loginUser = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
+    // loginUser로 Token 만들어서 발급
+    return UserResponse.from(loginUser, null);
 
   }
 

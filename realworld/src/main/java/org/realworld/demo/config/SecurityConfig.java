@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/articles/*").permitAll()
                 .anyRequest().authenticated())
         .csrf().disable()
-        .addFilterAfter(new JwtAuthenticationFilter(jwtUtil, authenticationProvider()),
+        .addFilterAfter(new JwtAuthenticationFilter(jwtUtil),
             SecurityContextPersistenceFilter.class);
   }
 
