@@ -13,26 +13,26 @@ public class UserDto {
   public static class UserUpdateRequest {
 
     @JsonProperty(value = "user")
-    public UserUpdateRequest.Request request;
+    public UserUpdateRequest.Request user;
 
     public String getEmail() {
-      return request.email;
+      return user.email;
     }
 
     public String getUsername() {
-      return request.username;
+      return user.username;
     }
 
     public String getPassword() {
-      return request.password;
+      return user.password;
     }
 
     public String getImage() {
-      return request.image;
+      return user.image;
     }
 
     public String getBio() {
-      return request.bio;
+      return user.bio;
     }
 
     public static class Request {

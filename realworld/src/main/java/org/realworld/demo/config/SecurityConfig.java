@@ -2,13 +2,10 @@ package org.realworld.demo.config;
 
 import org.realworld.demo.domain.user.service.UserService;
 import org.realworld.demo.jwt.JwtAuthenticationFilter;
-import org.realworld.demo.jwt.JwtAuthenticationProvider;
 import org.realworld.demo.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,11 +21,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
   private UserService userService;
-
-  @Bean
-  AuthenticationProvider authenticationProvider() {
-    return new JwtAuthenticationProvider(userService, jwtUtil);
-  }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
