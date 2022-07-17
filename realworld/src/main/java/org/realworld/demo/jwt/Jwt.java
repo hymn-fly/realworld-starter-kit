@@ -13,7 +13,7 @@ import lombok.Getter;
 import org.springframework.stereotype.Component;
 
 @Component
-public final class JwtUtil {
+public final class Jwt {
 
   private final JwtConfiguration configuration;
 
@@ -21,7 +21,7 @@ public final class JwtUtil {
 
   private final JWTVerifier verifier;
 
-  public JwtUtil(JwtConfiguration jwtConfiguration) {
+  public Jwt(JwtConfiguration jwtConfiguration) {
     this.configuration = jwtConfiguration;
     this.algorithm = Algorithm.HMAC512(jwtConfiguration.getClientSecret());
     this.verifier = JWT.require(this.algorithm)
@@ -39,7 +39,6 @@ public final class JwtUtil {
         .withIssuedAt(now)
 
         .withClaim("email", claims.email)
-        .withArrayClaim("roles", claims.roles)
         .sign(algorithm);
   }
 
@@ -55,8 +54,6 @@ public final class JwtUtil {
 
     private final String email;
 
-    private final String[] roles;
-
     private String iss;
 
     private Date exp;
@@ -67,7 +64,6 @@ public final class JwtUtil {
     private Claims(DecodedJWT decodedJWT) {
       Map<String, Claim> claims = decodedJWT.getClaims();
       this.email = claims.getOrDefault("email", new NullClaim()).asString();
-      this.roles = claims.getOrDefault("roles", new NullClaim()).asArray(String.class);
       this.userId = claims.getOrDefault("userId", new NullClaim()).asLong();
 
       this.exp = decodedJWT.getExpiresAt();
@@ -75,15 +71,14 @@ public final class JwtUtil {
       this.iss = decodedJWT.getIssuer();
     }
 
-    private Claims(Long userId, String email, String... roles) {
+    private Claims(Long userId, String email) {
       this.email = email;
-      this.roles = roles;
       this.userId = userId;
     }
 
     // Jwt Token만들 때, 사용하는 정적 메소드
-    public static Claims from(Long userId, String email, String... roles) {
-      return new Claims(userId, email, roles);
+    public static Claims from(Long userId, String email) {
+      return new Claims(userId, email);
     }
 
   }

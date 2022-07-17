@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.realworld.demo.controller.dto.UserDto.UserResponse;
 import org.realworld.demo.domain.user.entity.User;
 import org.realworld.demo.domain.user.repository.UserRepository;
-import org.realworld.demo.jwt.JwtUtil;
+import org.realworld.demo.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
 
-  private final JwtUtil jwtUtil;
+  private final Jwt jwt;
 
   public User saveUser(User user) {
     return userRepository.save(user);
@@ -41,11 +41,7 @@ public class UserServiceImpl implements UserService {
       throw new IllegalArgumentException("이메일이나 비밀번호가 잘못되었습니다");
     }
 
-    String[] roles = user.getAuthorities()
-        .stream().map(Object::toString)
-        .toList().toArray(String[]::new);
-
-    String jwt = jwtUtil.createToken(JwtUtil.Claims.from(user.getId(), email, roles));
+    String jwt = this.jwt.createToken(Jwt.Claims.from(user.getId(), email));
 
     return UserResponse.from(user, jwt);
   }
