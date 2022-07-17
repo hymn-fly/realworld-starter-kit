@@ -1,5 +1,6 @@
 package org.realworld.demo.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.realworld.demo.controller.dto.UserDto.UserCreateRequest;
 import org.realworld.demo.controller.dto.UserDto.UserLoginRequest;
 import org.realworld.demo.controller.dto.UserDto.UserResponse;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 public class UserController {
 
   private final UserService userService;
@@ -28,6 +30,10 @@ public class UserController {
 
   @PostMapping("/users/login")
   public UserResponse login(@RequestBody UserLoginRequest loginRequest) {
+    log.info("info");
+    log.error("error");
+    log.debug("debug");
+    log.warn("warn");
     return userService.login(loginRequest.getEmail(), loginRequest.getPassword());
   }
 
