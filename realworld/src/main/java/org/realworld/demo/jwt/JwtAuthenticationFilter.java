@@ -2,16 +2,15 @@ package org.realworld.demo.jwt;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.realworld.demo.jwt.JwtUtil.Claims;
+import org.realworld.demo.jwt.Jwt.Claims;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -19,11 +18,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  private final JwtUtil jwtUtil;
+  private final Jwt jwt;
 
 
-  public JwtAuthenticationFilter(JwtUtil jwtUtil) {
-    this.jwtUtil = jwtUtil;
+  public JwtAuthenticationFilter(Jwt jwt) {
+    this.jwt = jwt;
   }
 
   @Override
@@ -45,13 +44,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private JwtAuthenticationToken createAuthentication(String token) {
     try {
-      Claims claims = jwtUtil.verifyToken(token);
-      String jwt = jwtUtil.createToken(claims);
+      Claims claims = jwt.verifyToken(token);
 
       return new JwtAuthenticationToken(
-          new JwtPrincipal(jwt, claims.getUserId()),
+          new JwtPrincipal(token, claims.getUserId()),
           null,
-          Arrays.stream(claims.getRoles()).map(SimpleGrantedAuthority::new).toList());
+          new ArrayList<>());
 
     } catch (JWTVerificationException ex) {
       return null;
