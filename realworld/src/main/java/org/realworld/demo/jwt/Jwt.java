@@ -37,7 +37,7 @@ public final class Jwt {
         .withIssuer(configuration.getIssuer())
         .withExpiresAt(expireDate)
         .withIssuedAt(now)
-
+        .withClaim("id", claims.getId())
         .withClaim("email", claims.email)
         .sign(algorithm);
   }
@@ -50,7 +50,7 @@ public final class Jwt {
   @Getter
   public static class Claims {
 
-    private final Long userId;
+    private final Long id;
 
     private final String email;
 
@@ -64,16 +64,16 @@ public final class Jwt {
     private Claims(DecodedJWT decodedJWT) {
       Map<String, Claim> claims = decodedJWT.getClaims();
       this.email = claims.getOrDefault("email", new NullClaim()).asString();
-      this.userId = claims.getOrDefault("userId", new NullClaim()).asLong();
+      this.id = claims.getOrDefault("id", new NullClaim()).asLong();
 
       this.exp = decodedJWT.getExpiresAt();
       this.iat = decodedJWT.getIssuedAt();
       this.iss = decodedJWT.getIssuer();
     }
 
-    private Claims(Long userId, String email) {
+    private Claims(Long id, String email) {
       this.email = email;
-      this.userId = userId;
+      this.id = id;
     }
 
     // Jwt Token만들 때, 사용하는 정적 메소드

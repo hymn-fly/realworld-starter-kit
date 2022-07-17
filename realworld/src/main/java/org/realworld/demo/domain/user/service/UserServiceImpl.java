@@ -20,10 +20,11 @@ public class UserServiceImpl implements UserService {
     return userRepository.save(user);
   }
 
-  public User updateUser(User originUser, String email, String username, String password,
-      String image, String bio) {
-    User updatedUser = originUser.update(email, password, username, bio, image);
-    return userRepository.save(updatedUser);
+  public User updateUser(Long userId, String email, String username,
+      String password, String image, String bio) {
+    User user = userRepository.findById(userId).orElseThrow(IllegalStateException::new);
+    user.update(email, password, username, bio, image);
+    return userRepository.save(user);
   }
 
   public User getUserByUsername(String username) {

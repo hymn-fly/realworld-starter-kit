@@ -7,10 +7,12 @@ public interface UserService {
 
   User saveUser(User user);
 
-  User updateUser(User originUser, String email, String username,
+  User updateUser(Long userId, String email, String username,
       String password, String image, String bio);
 
   User getUserByUsername(String username);
+
+  User getById(Long id);
 
   UserResponse login(String email, String password);
 

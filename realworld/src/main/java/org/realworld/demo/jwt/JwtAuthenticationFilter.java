@@ -47,7 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       Claims claims = jwt.verifyToken(token);
 
       return new JwtAuthenticationToken(
-          new JwtPrincipal(token, claims.getUserId()),
+          new JwtPrincipal(token, claims.getId()),
           null,
           new ArrayList<>());
 

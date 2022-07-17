@@ -61,10 +61,10 @@ public class UserDto {
   public static class UserCreateRequest {
 
     @JsonProperty(value = "user")
-    public UserCreateRequest.Request request;
+    public UserCreateRequest.Request user;
 
     public User toUser() {
-      return request.toUser();
+      return user.toUser();
     }
 
     public static class Request {
