@@ -1,15 +1,11 @@
 package org.realworld.demo.config;
 
 import org.realworld.demo.domain.user.service.UserService;
+import org.realworld.demo.jwt.Jwt;
 import org.realworld.demo.jwt.JwtAuthenticationFilter;
-import org.realworld.demo.jwt.JwtAuthenticationProvider;
-import org.realworld.demo.jwt.JwtConfiguration;
-import org.realworld.demo.jwt.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,29 +17,21 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired
-  private JwtConfiguration jwtConfiguration;
-
-  @Autowired
-  private JwtUtil jwtUtil;
+  private Jwt jwt;
 
   @Autowired
   private UserService userService;
-
-  @Bean
-  AuthenticationProvider authenticationProvider() {
-    return new JwtAuthenticationProvider(userService, jwtUtil);
-  }
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.authorizeRequests(
             request -> request
-                .antMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/users/login", "/api/users").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/profiles/*").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/articles/*").permitAll()
                 .anyRequest().authenticated())
         .csrf().disable()
-        .addFilterAfter(new JwtAuthenticationFilter(jwtUtil, authenticationProvider()),
+        .addFilterAfter(new JwtAuthenticationFilter(jwt),
             SecurityContextPersistenceFilter.class);
   }
 
