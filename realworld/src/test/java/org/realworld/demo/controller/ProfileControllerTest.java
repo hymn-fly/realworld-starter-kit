@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.realworld.demo.domain.user.entity.User;
 import org.realworld.demo.jwt.Jwt;
 
-class ProfileControllerTest extends BaseControllerTest {
+class ProfileControllerTest extends RestDocsSupportTest {
 
   private final User followee = new User("followee@gmail.com", "1234", "followee", "I'm a followee",
       "https://aaabbb.jpg");

@@ -21,11 +21,9 @@ import org.realworld.demo.domain.article.entity.Article;
 import org.realworld.demo.domain.article.repository.ArticleRepository;
 import org.realworld.demo.jwt.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 
-@SpringBootTest
-class ArticleControllerTest extends BaseControllerTest {
+class ArticleControllerTest extends RestDocsSupportTest {
 
   @Autowired
   private ArticleRepository articleRepository;
@@ -47,9 +45,9 @@ class ArticleControllerTest extends BaseControllerTest {
   }
 
   @Test
-  @DisplayName("POST /api/articles")
-  void test1() throws Exception {
+  void 기사_등록_성공() throws Exception {
     //Given
+    로그인(user.getEmail(), user.getPassword());
     ObjectNode node = objectMapper.createObjectNode();
     ObjectNode articleNode = node.putObject("article");
     articleNode.put("title", newArticle.getTitle());
@@ -59,8 +57,6 @@ class ArticleControllerTest extends BaseControllerTest {
     for (Tag tag : newArticle.getTags()) {
       tagList.add(tag.getName());
     }
-
-    String token = jwt.createToken(Jwt.Claims.from(user.getId(), user.getEmail()));
 
     // When
     // Then
