@@ -1,10 +1,10 @@
 package org.realworld.demo.config;
 
+import org.realworld.demo.domain.user.service.UserService;
+import org.realworld.demo.jwt.Jwt;
 import org.realworld.demo.jwt.JwtAuthenticationFilter;
-import org.realworld.demo.jwt.JwtConfiguration;
-import org.realworld.demo.jwt.JwtUtil;
-import org.realworld.demo.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -13,30 +13,30 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 @EnableWebSecurity
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private JwtConfiguration jwtConfiguration;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+  @Autowired
+  private Jwt jwt;
 
-    @Autowired
-    private UserRepository userRepository;
+  @Autowired
+  private UserService userService;
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests(
-                request -> request
-                        .antMatchers(HttpMethod.POST, "/api/users/**").permitAll()
-                        .antMatchers(HttpMethod.GET, "/api/profiles/*").permitAll()
-                        .antMatchers(HttpMethod.GET, "/api/articles/*").permitAll()
-                        .anyRequest().authenticated())
-            .csrf().disable()
-            .addFilterAfter(new JwtAuthenticationFilter(jwtConfiguration.getHeader(), jwtUtil, userRepository), SecurityContextPersistenceFilter.class);
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests(
+            request -> request
+                .antMatchers(HttpMethod.POST, "/api/users/login", "/api/users").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/profiles/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/articles/*").permitAll()
+                .anyRequest().authenticated())
+        .csrf().disable()
+        .addFilterAfter(new JwtAuthenticationFilter(jwt),
+            SecurityContextPersistenceFilter.class);
+  }
 
-    @Override
-    public void configure(WebSecurity web){
-        web.ignoring().antMatchers("/h2-console/**");
-    }
+  @Override
+  public void configure(WebSecurity web) {
+    web.ignoring().antMatchers("/h2-console/**");
+  }
 }

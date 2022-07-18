@@ -1,49 +1,67 @@
 package org.realworld.demo.jwt;
 
-import org.realworld.demo.domain.user.entity.User;
-import org.realworld.demo.domain.user.repository.UserRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.filter.GenericFilterBean;
-
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import java.io.IOException;
+import java.util.ArrayList;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
+import org.realworld.demo.jwt.Jwt.Claims;
+import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 
-public class JwtAuthenticationFilter extends GenericFilterBean {
+@Slf4j
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final String jwtHeaderName;
+  private final Jwt jwt;
 
-    private final JwtUtil jwtUtil;
 
-    private final UserRepository userRepository;
+  public JwtAuthenticationFilter(Jwt jwt) {
+    this.jwt = jwt;
+  }
 
-    public JwtAuthenticationFilter(String jwtHeaderName, JwtUtil jwtUtil, UserRepository userRepository){
-        this.jwtHeaderName = jwtHeaderName;
-        this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
+  @Override
+  protected void doFilterInternal(HttpServletRequest httpServletRequest,
+      HttpServletResponse httpServletResponse, FilterChain filterChain)
+      throws ServletException, IOException {
+    if (getToken(httpServletRequest) != null
+        && SecurityContextHolder.getContext().getAuthentication() == null) {
+      String token = getToken(httpServletRequest);
+      JwtAuthenticationToken authenticationToken = this.createAuthentication(token);
+
+      if (authenticationToken != null) {
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+      }
     }
+    filterChain.doFilter(httpServletRequest, httpServletResponse);
 
-    @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        String token = getToken((HttpServletRequest) servletRequest);
-        if(token == null){
-            filterChain.doFilter(servletRequest, servletResponse);
-            return;
-        }
-        User user = userRepository.findByEmail(jwtUtil.verifyToken(token)).orElseThrow();
-        SecurityContextHolder.getContext().setAuthentication(new JwtAuthenticationToken(user, token));
-        filterChain.doFilter(servletRequest, servletResponse);
-    }
+  }
 
-    private String getToken(HttpServletRequest request){
-        String token = request.getHeader(this.jwtHeaderName);
-        if(token == null){
-            return null;
-        }
-        return token.substring("Bearer ".length());
+  private JwtAuthenticationToken createAuthentication(String token) {
+    try {
+      Claims claims = jwt.verifyToken(token);
+
+      return new JwtAuthenticationToken(
+          new JwtPrincipal(token, claims.getId()),
+          null,
+          new ArrayList<>());
+
+    } catch (JWTVerificationException ex) {
+      return null;
     }
+  }
+
+  private String getToken(ServletRequest request) {
+    HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+    String token = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+    if (token == null) {
+      return null;
+    }
+    return token.substring("Bearer ".length());
+  }
 }

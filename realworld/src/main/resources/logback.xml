@@ -15,6 +15,11 @@
 
   <appender name="ROLLING_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>logs/error.log</file>
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>ERROR</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
     <encoder>
       <pattern>${FILE_LOG_PATTERN}</pattern>
     </encoder>
@@ -25,9 +30,7 @@
 
   <root level="info">
     <appender-ref ref="STDOUT"/>
+    <appender-ref ref="ROLLING_FILE"/>
   </root>
 
-  <logger name="org.realworld" level="debug">
-    <appender-ref ref="ROLLING_FILE"/>
-  </logger>
 </configuration>

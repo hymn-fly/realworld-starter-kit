@@ -1,4 +1,3 @@
-
 spring:
   datasource:
     url: "jdbc:h2:file:./db;DATABASE_TO_LOWER=TRUE;"
@@ -6,7 +5,7 @@ spring:
     password:
 
   jpa:
-#    generate-ddl: true
+    #    generate-ddl: true
     hibernate:
       ddl-auto: validate
     show-sql: true
@@ -23,7 +22,6 @@ spring:
 
 jwt:
   client-secret: my-real-world
-  header: Authorization
   issuer: geuno
   expiry-seconds: 300
 
