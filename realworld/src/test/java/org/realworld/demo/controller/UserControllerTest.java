@@ -1,5 +1,8 @@
 package org.realworld.demo.controller;
 
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -12,8 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.payload.JsonFieldType;
 
-class UserControllerTest extends BaseControllerTest {
+class UserControllerTest extends RestDocsSupportTest {
 
   @Test
   void 로그인_성공() throws Exception {
@@ -32,7 +36,20 @@ class UserControllerTest extends BaseControllerTest {
         .andExpect(jsonPath("$.user.email").value("example@jake.jake"))
         .andExpect(jsonPath("$.user.username").value("Jacob"))
         .andExpect(jsonPath("$.user.token").isNotEmpty())
-        .andDo(print());
+        .andDo(print())
+        .andDo(restdocs.document(
+            requestFields(
+                fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                fieldWithPath("user.password").type(JsonFieldType.STRING).description("비밀번호")
+            ),
+            responseFields(
+                fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                fieldWithPath("user.token").type(JsonFieldType.STRING).description("JWT 토큰"),
+                fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저명"),
+                fieldWithPath("user.bio").type(JsonFieldType.STRING).description("부가설명"),
+                fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지경로")
+            )
+        ));
   }
 
   @Test
@@ -69,7 +86,21 @@ class UserControllerTest extends BaseControllerTest {
         .andExpect(jsonPath("$.user.email").value("testuser@email.com"))
         .andExpect(jsonPath("$.user.username").value("testuser"))
         .andExpect(jsonPath("$.user.token").isEmpty())
-        .andDo(print());
+        .andDo(print())
+        .andDo(restdocs.document(
+            requestFields(
+                fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저명"),
+                fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                fieldWithPath("user.password").type(JsonFieldType.STRING).description("비밀번호")
+            ),
+            responseFields(
+                fieldWithPath("user.email").type(JsonFieldType.STRING).description("이메일"),
+                fieldWithPath("user.token").type(JsonFieldType.STRING).description("JWT 토큰"),
+                fieldWithPath("user.username").type(JsonFieldType.STRING).description("유저명"),
+                fieldWithPath("user.bio").type(JsonFieldType.STRING).description("부가설명"),
+                fieldWithPath("user.image").type(JsonFieldType.STRING).description("이미지경로")
+            )
+        ));
   }
 
   @Test

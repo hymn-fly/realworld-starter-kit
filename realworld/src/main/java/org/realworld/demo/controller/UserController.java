@@ -30,10 +30,6 @@ public class UserController {
 
   @PostMapping("/users/login")
   public UserResponse login(@RequestBody UserLoginRequest loginRequest) {
-    log.info("info");
-    log.error("error");
-    log.debug("debug");
-    log.warn("warn");
     return userService.login(loginRequest.getEmail(), loginRequest.getPassword());
   }
 

@@ -11,19 +11,18 @@ import org.realworld.demo.domain.user.entity.User;
 import org.realworld.demo.domain.user.repository.UserRepository;
 import org.realworld.demo.jwt.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+@AutoConfigureRestDocs
 @Transactional
 public abstract class BaseControllerTest {
 
-  @Autowired
-  MockMvc mvc;
+  protected MockMvc mvc;
 
   @Autowired
   UserRepository userRepository;
@@ -33,7 +32,7 @@ public abstract class BaseControllerTest {
 
   protected String token;
 
-  final ObjectMapper objectMapper = new ObjectMapper();
+  protected final ObjectMapper objectMapper = new ObjectMapper();
 
   final User user = new User("example@jake.jake", "jakejake", "Jacob", "", "");
 
