@@ -1,0 +1,6 @@
+[[USER_API]]
+== USER API
+
+=== 로그인
+
+operation::user-controller-test/로그인_성공/[snippets='http-request,request-fields,http-response,response-fields']
