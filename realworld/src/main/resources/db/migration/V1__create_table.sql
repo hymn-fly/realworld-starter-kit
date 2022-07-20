@@ -11,7 +11,6 @@ create table article
     primary key (id)
 );
 
-
 create table article_tags
 (
     article_id bigint not null,
@@ -28,7 +27,6 @@ create table comment
     author_id  bigint not null,
     primary key (id)
 );
-
 
 create table follow
 (
@@ -56,19 +54,19 @@ create table users
     primary key (id)
 );
 
-alter table users
-    add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email);
-
 alter table article
     add constraint UK_lc76j4bqg2jrk06np18eve5yj unique (slug);
+
+alter table article_tags
+    add constraint UK_8cum6s2ucfosk3e4jepem69m5 unique (tags_id);
+
+alter table users
+    add constraint UK_6dotkott2kjsp8vw4d0m25fb7 unique (email);
 
 alter table article
     add constraint FKmjgtny2i22jf4dqncmd436s0u
         foreign key (author_id)
             references users (id);
-
-alter table article_tags
-    add constraint UK_8cum6s2ucfosk3e4jepem69m5 unique (tags_id);
 
 alter table article_tags
     add constraint FKp6owh2p5p9yllwwrc2hn7bnxr

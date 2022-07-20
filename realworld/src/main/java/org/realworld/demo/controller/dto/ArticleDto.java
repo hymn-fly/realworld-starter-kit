@@ -3,6 +3,7 @@ package org.realworld.demo.controller.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.realworld.demo.domain.Tag;
 import org.realworld.demo.domain.article.entity.Article;
 import org.realworld.demo.domain.user.entity.User;
@@ -44,7 +45,7 @@ public class ArticleDto {
         this.slug = article.getSlug();
         this.description = article.getDescription();
         this.body = article.getBody();
-        this.tagList = article.getTags().stream().map(Tag::getName).toList();
+        this.tagList = article.getTags().stream().map(Tag::getName).collect(Collectors.toList());
         this.createdAt = article.getCreatedAt();
         this.updatedAt = article.getUpdatedAt();
         this.author = new Author(article.getAuthor(), following);
