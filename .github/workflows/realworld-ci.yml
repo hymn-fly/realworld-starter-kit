@@ -23,6 +23,6 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Test Mysql setup
-        run: docker run -e MYSQL_ROOT_PASSWORD=1234 -d -p 3306:3306 mysql:8.0.28-oracle
+        run: docker run -e MYSQL_ROOT_PASSWORD=1234 -e MYSQL_DATABASE=realworld -d -p 3306:3306 mysql:8.0.28-oracle
       - name: Build with Maven
         run: mvn -B package --file realworld/pom.xml
