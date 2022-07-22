@@ -28,9 +28,9 @@ jobs:
         run: mvn -B package --file realworld/pom.xml
       - name: Zip the source files
         run: |
-        zip -r realworld-src *,
-        mkdir -p deploy,
-        mv realworld-src.zip deploy/realworld-src.zip
+          zip -r realworld-src *,
+          mkdir -p deploy,
+          mv realworld-src.zip deploy/realworld-src.zip
       - name: Upload to s3
         uses: shallwefootball/s3-upload-action@master
         with:
