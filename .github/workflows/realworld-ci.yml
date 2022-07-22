@@ -26,3 +26,15 @@ jobs:
         run: docker run -e MYSQL_ROOT_PASSWORD=1234 -e MYSQL_DATABASE=realworld -d -p 3306:3306 mysql:8.0.28-oracle
       - name: Build with Maven
         run: mvn -B package --file realworld/pom.xml
+      - name: Zip the source files
+        run: |
+        zip -r realworld-src *,
+        mkdir -p deploy,
+        mv realworld-src.zip deploy/realworld-src.zip
+      - name: Upload to s3
+        uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_bucket: ${{ secrets.AWS_BUCKET }}
+          source_dir: 'deploy'
