@@ -30,6 +30,7 @@ jobs:
     needs: build
     runs-on: ubuntu-18.04
     steps:
+      - uses: actions/checkout@v3
       - name: Zip the source files
         run: zip realworld-src.zip -r ./*
       - name: make dir
