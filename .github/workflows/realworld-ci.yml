@@ -27,10 +27,11 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file realworld/pom.xml
       - name: Zip the source files
-        run: |
-          zip realworld-src.zip -r ./*
-          mkdir -p deploy,
-          mv realworld-src.zip deploy/realworld-src.zip
+        run: zip realworld-src.zip -r ./*
+      - name: make dir
+        run: mkdir -p deploy
+      - name: move file
+        run: mv realworld-src.zip deploy/realworld-src.zip
       - name: Upload to s3
         uses: shallwefootball/s3-upload-action@master
         with:
