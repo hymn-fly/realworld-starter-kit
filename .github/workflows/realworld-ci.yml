@@ -13,7 +13,6 @@ jobs:
   build:
 
     runs-on: ubuntu-18.04
-
     steps:
       - uses: actions/checkout@v3
       - name: Set up JDK 11
@@ -26,17 +25,33 @@ jobs:
         run: docker run -e MYSQL_ROOT_PASSWORD=1234 -e MYSQL_DATABASE=realworld -d -p 3306:3306 mysql:8.0.28-oracle
       - name: Build with Maven
         run: mvn -B package --file realworld/pom.xml
+
+  deploy:
+    runs-on: ubuntu-18.04
+    steps:
       - name: Zip the source files
         run: zip realworld-src.zip -r ./*
       - name: make dir
         run: mkdir -p deploy
       - name: move file
         run: mv realworld-src.zip deploy/realworld-src.zip
-      - name: Upload to s3
+      - name: aws configure
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: upload zipfile to S3
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
-          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: aws s3 cp  --recursive deploy s3://$AWS_BUCKET
+
+      - name: create-deployment
+        env:
+          AWS_BUCKET: ${{ secrets.AWS_BUCKET }}
+        run: |
+          aws deploy create-deployment --application-name codedeploy-realworld 
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name realworld
+          --s3-location bucket=$AWS_BUCKET,bundleType=zip,key=realworld-src.zip
 
