@@ -28,7 +28,8 @@ jobs:
         run: mvn -B package --file realworld/pom.xml
 
       # Deploy
-      - uses: actions/checkout@v3
+      - name: mv jar file
+        run: mv ./realworld/target/realworld-0.0.1-SNAPSHOT.jar ./realworld-0.0.1-SANPSHOT.jar
       - name: Zip the source files
         run: zip realworld-src.zip -r ./*
       - name: make dir
