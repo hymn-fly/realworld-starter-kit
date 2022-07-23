@@ -17,4 +17,4 @@ hooks:
   ApplicationStart:
     - location: deploy.sh
       timeout: 60
-      runas: ec2-user # ec-user권한으로 deploy.sh를 실행
+      runas: root # ec-user권한으로 deploy.sh를 실행
